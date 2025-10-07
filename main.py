@@ -4,17 +4,24 @@ def show_menu():
     print("2) View tasks")
     print("9) Quit")
 
+def handle_choice(choice: str) -> bool:
+    if choice == "1":
+        print("(TODO) add_task()")
+    elif choice == "2":
+        print("(TODO) view_tasks()")
+    elif choice == "9":
+        print("Bye!")
+        return False
+    else:
+        print("Invalid choice. Please choose 1, 2 or 9.")
+    return True
+
 def main():
-    while True:
+    running = True
+    while running:
         show_menu()
         choice = input("Select an option: ").strip()
-        if choice == "9":
-            print("Bye!")
-            break
-        elif choice in {"1","2"}:
-            print("(feature coming soon)")
-        else:
-            print("Invalid choice. Please choose 1, 2 or 9.")
+        running = handle_choice(choice)
 
 if __name__ == "__main__":
     main()
