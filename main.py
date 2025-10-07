@@ -1,3 +1,5 @@
+from task import Task
+
 def show_menu():
     print("\n=== To-Do List Manager ===")
     print("1) Add task")
