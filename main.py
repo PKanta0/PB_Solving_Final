@@ -34,9 +34,9 @@ def show_menu():
 
 def handle_choice(choice: str) -> bool:
     if choice == "1":
-        print("(TODO) add_task()")
+        add_task()
     elif choice == "2":
-        print("(TODO) view_tasks()")
+        view_tasks()
     elif choice == "9":
         print("Bye!")
         return False
