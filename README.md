@@ -19,7 +19,7 @@
   
 ## 🔹 How to Run 
 1. open terminal
-2. Run: python main py
+2. Run: python main.py
 3. Follow on-screen menu
 
 ## 🔹 Git Workflow 
