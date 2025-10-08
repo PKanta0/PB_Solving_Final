@@ -1,6 +1,19 @@
+import json, os
 from task import Task
 
-tasks= []
+FILENAME = "tasks.json"
+
+def load_tasks():
+    if not os.path.exists(FILENAME):
+        return []
+    with open(FILENAME, "r", encoding="utf-8") as f:
+        return json.load(f)
+
+def save_tasks(tasks):
+    with open(FILENAME, "w", encoding="utf-8") as f:
+        json.dump(tasks, f, indent=4, ensure_ascii=False)
+
+tasks = load_tasks()
 
 def add_task():
     description = input("Enter task description ").strip()
@@ -79,6 +92,20 @@ def toggle_task():
     task.toggle()
     status = "✅ Done" if task.completed else "⏳ Pending"
     print(f"🔁 Task status changed: {status}")
+
+def save_tasks():
+    ensure_data_dir()
+    with open(DATA_FILE, "w", encoding="utf-8") as f:
+        json.dump(
+            [
+                {"description": t.description, "due_date": t.due_date, "completed": t.completed}
+                for t in tasks
+            ],
+            f,
+            indent=2,
+            ensure_ascii=False
+        )
+    print(f"💾 Saved {len(tasks)} task(s) to {DATA_FILE}")
 
 def show_menu():
     print("\n=== To-Do List Manager ===")
