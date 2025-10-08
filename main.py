@@ -1,17 +1,26 @@
 import json, os
 from task import Task
 
-FILENAME = "tasks.json"
+FILENAME = "data/tasks.json"
 
 def load_tasks():
-    if not os.path.exists(FILENAME):
+    if not os.path.exists(FILENAME) or os.path.getsize(FILENAME) == 0:
         return []
     with open(FILENAME, "r", encoding="utf-8") as f:
-        return json.load(f)
+        data = json.load(f) 
+    tasks = [Task(d.get("description", ""), d.get("due_date")) for d in data]
+    for t, d in zip(tasks, data):
+        if d.get("completed"):
+            t.mark_complete()
+    return tasks
 
 def save_tasks(tasks):
+    serializable = [
+        {"description": t.description, "due_date": t.due_date, "completed": t.completed}
+        for t in tasks
+    ]
     with open(FILENAME, "w", encoding="utf-8") as f:
-        json.dump(tasks, f, indent=4, ensure_ascii=False)
+        json.dump(serializable, f, indent=4, ensure_ascii=False)
 
 tasks = load_tasks()
 
@@ -25,6 +34,7 @@ def add_task():
     
     task = Task(description, due_date if due_date else None)
     tasks.append(task)
+    save_tasks(tasks) 
     print("✅ Task added successfully!!")
 
 def view_tasks():
@@ -59,6 +69,7 @@ def edit_task():
         task.due_date = new_due
 
     print("✏️ Task updated successfully!")
+    save_tasks(tasks) 
 
 def delete_task():
     view_tasks()
@@ -77,6 +88,7 @@ def delete_task():
         print("🗑️ Task deleted successfully!")
     else:
         print("↩️ Deletion cancelled.")
+    save_tasks(tasks)
 
 def toggle_task():
     view_tasks()
@@ -92,20 +104,7 @@ def toggle_task():
     task.toggle()
     status = "✅ Done" if task.completed else "⏳ Pending"
     print(f"🔁 Task status changed: {status}")
-
-def save_tasks():
-    ensure_data_dir()
-    with open(DATA_FILE, "w", encoding="utf-8") as f:
-        json.dump(
-            [
-                {"description": t.description, "due_date": t.due_date, "completed": t.completed}
-                for t in tasks
-            ],
-            f,
-            indent=2,
-            ensure_ascii=False
-        )
-    print(f"💾 Saved {len(tasks)} task(s) to {DATA_FILE}")
+    save_tasks(tasks)
 
 def show_menu():
     print("\n=== To-Do List Manager ===")
